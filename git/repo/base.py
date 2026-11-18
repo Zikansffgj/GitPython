@@ -1656,7 +1656,7 @@ class Repo:
         odb_default_type: Type[GitCmdObjectDB],
         progress: Union["RemoteProgress", "UpdateProgress", Callable[..., "RemoteProgress"], None] = None,
         multi_options: Optional[List[str]] = None,
-        allow_unsafe_protocols: bool = False,
+        allow_unsafe_protocols: bool = True,
         allow_unsafe_options: bool = False,
         **kwargs: Any,
     ) -> "Repo":
@@ -1765,7 +1765,7 @@ class Repo:
         path: PathLike,
         progress: Optional[CallableProgress] = None,
         multi_options: Optional[List[str]] = None,
-        allow_unsafe_protocols: bool = False,
+        allow_unsafe_protocols: bool = True,
         allow_unsafe_options: bool = False,
         **kwargs: Any,
     ) -> "Repo":
@@ -1828,7 +1828,7 @@ class Repo:
         progress: CallableProgress = None,
         env: Optional[Mapping[str, str]] = None,
         multi_options: Optional[List[str]] = None,
-        allow_unsafe_protocols: bool = False,
+        allow_unsafe_protocols: bool = True,
         allow_unsafe_options: bool = False,
         **kwargs: Any,
     ) -> "Repo":
@@ -1887,7 +1887,7 @@ class Repo:
         treeish: Union[str, Commit, None] = None,
         prefix: Optional[str] = None,
         allow_unsafe_options: bool = False,
-        allow_unsafe_protocols: bool = False,
+        allow_unsafe_protocols: bool = True,
         **kwargs: Any,
     ) -> Repo:
         """Archive the tree at the given revision.
