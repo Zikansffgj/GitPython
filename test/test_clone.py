@@ -443,19 +443,15 @@ class TestClone(TestBase):
                 Repo.clone_from(rw_repo.common_dir, destination, multi_options=[option])
                 assert destination.exists()
 
-    def test_clone_from_unsafe_protocol(self):
-        with writable_fixture("empty.sh") as temporary:
-            tdir = str(temporary.path().resolve())
-            tmp_dir = pathlib.Path(tdir)
-            tmp_file = tmp_dir / "pwn"
-            urls = [
-                f"ext::sh -c touch% {tmp_file}",
-                "fd::17/foo",
-            ]
-            for url in urls:
-                with self.assertRaises(UnsafeProtocolError):
-                    Repo.clone_from(url, tmp_dir / "repo")
-                assert not tmp_file.exists()
+    def test_clone_from_unsafe_protocol_default(self):
+        # Pre-3.1.30 default restored for backward compatibility (see #1544, #1557):
+        # unsafe transports run unless the caller explicitly disables them.
+        with mock.patch.object(Git, "_call_process_safe", side_effect=RuntimeError) as run:
+            with self.assertRaises(RuntimeError):
+                Repo.clone_from("ext::sh -c true", "unused")
+            run.assert_called_once()
+        with self.assertRaises(UnsafeProtocolError):
+            Repo.clone_from("ext::sh -c true", "unused", allow_unsafe_protocols=False)
 
     def test_clone_from_does_not_expand_environment_variables_in_url(self):
         urls = [
